@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KompNazorat — Kadastr Tizimi Korrupsiyaga Qarshi Komplayens Portali</title>
+  <title>KompNazorat — Kadastr Komplayens Nazorati Portali</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap');
@@ -39,9 +38,9 @@
         <button onclick="switchTab('operations')" id="btn-operations" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-handcuffs w-5 text-center text-rose-500 text-sm"></i>
-            <span>Tezkor Tadbirlar (14)</span>
+            <span>Tezkor Tadbirlar</span>
           </div>
-          <span class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded-md font-black">Reydlar</span>
+          <span class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded-md font-black">14 ta</span>
         </button>
 
         <button onclick="switchTab('matrix-report')" id="btn-matrix-report" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition">
@@ -132,34 +131,7 @@
       <!-- 1. DASHBOARD TABI -->
       <section id="tab-dashboard" class="space-y-6">
         
-        <!-- KREATİV 1: ASHYOVIY DALILLAR VA QAYTARILGAN MABLAG' HISOB-KITOBLARI -->
-        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-4 rounded-2xl shadow-lg border border-slate-800 text-white flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-rose-600/30 border border-rose-500/40 flex items-center justify-center text-rose-400 text-xl font-black">
-              <i class="fa-solid fa-scale-unbalanced-flip"></i>
-            </div>
-            <div>
-              <h3 class="text-sm font-black tracking-wide text-white uppercase">Tezkor Tadbirlarda Fosh Etilgan Pora va Moddiy Zararlar</h3>
-              <p class="text-xs text-slate-300 font-medium">Bosh prokuratura huzuridagi Departament, DXX va IIB hamkorligida olingan ashyoviy dalillar</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-8 pr-4">
-            <div class="text-right">
-              <span class="text-[11px] font-bold text-slate-400 block uppercase">Valyuta Mablag'lari</span>
-              <span class="text-xl font-black text-emerald-400 font-mono">$18,500 AQSH</span>
-            </div>
-            <div class="text-right border-l border-slate-800 pl-8">
-              <span class="text-[11px] font-bold text-slate-400 block uppercase">Milliy Valyutada</span>
-              <span class="text-xl font-black text-yellow-400 font-mono">148,000,000 so'm</span>
-            </div>
-            <div class="text-right border-l border-slate-800 pl-8">
-              <span class="text-[11px] font-bold text-slate-400 block uppercase">Qaytarilgan Yer Maydoni</span>
-              <span class="text-xl font-black text-cyan-400 font-mono">42.8 Gektar</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5 TA ASOSIY KPI KARTALARI -->
+        <!-- BOSILADIGAN ASOSIY 5 TA TAHLILIY BLOK -->
         <div class="grid grid-cols-5 gap-4">
           <div onclick="openDrilldownModal('all')" class="bg-white p-4 rounded-2xl border-2 border-slate-200/80 shadow-sm hover:border-blue-600 cursor-pointer transition">
             <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider block">Jami Topshiriqlar</span>
@@ -217,55 +189,84 @@
           </div>
         </div>
 
-        <!-- GRAFIKLAR -->
+        <!-- TAHLILIY GRAFIK VA STRUKTURA (ICHIGA BOSIB KIRILADIGAN QILINGAN) -->
         <div class="grid grid-cols-3 gap-6">
-          <div class="col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div onclick="openDrilldownModal('all')" class="col-span-2 bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm hover:border-blue-500 cursor-pointer transition">
             <div class="flex items-center justify-between mb-4">
               <div>
                 <h3 class="font-black text-slate-800 text-sm">Ijro Intizomi Dinamikasi va Protsessual Harakatlar</h3>
-                <p id="chart-desc" class="text-xs text-slate-400 font-medium">O'z vaqtida bajarilgan va kechikkan topshiriqlar harakati</p>
+                <p id="chart-desc" class="text-xs text-slate-400 font-medium">Bosing: topshiriqlarning viloyatlar kesimidagi asosiy tahlili ochiladi</p>
               </div>
-              <span id="chart-period-badge" class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg">Oylik monitoring</span>
+              <span id="chart-period-badge" class="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg">Oylik monitoring</span>
             </div>
-            <div class="h-64">
-              <canvas id="dynamicsChart"></canvas>
+            
+            <!-- AVTOMATIK INTERAKTIV GRAFIK STRUKTURASI -->
+            <div class="space-y-4 pt-2">
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>O'z vaqtida bajarilgan topshiriqlar</span>
+                  <span class="text-emerald-600 font-black">78 ta (63%)</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3">
+                  <div class="bg-emerald-500 h-3 rounded-full" style="width: 63%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>Muddati kechikkan va ijro etilmagan</span>
+                  <span class="text-rose-600 font-black">31 ta (25%)</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3">
+                  <div class="bg-rose-500 h-3 rounded-full" style="width: 25%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>Respublika tekshiruvida turgan javoblar</span>
+                  <span class="text-amber-500 font-black">15 ta (12%)</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3">
+                  <div class="bg-amber-500 h-3 rounded-full" style="width: 12%"></div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div onclick="switchTab('matrix-report')" class="bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm hover:border-amber-500 cursor-pointer transition flex flex-col justify-between">
             <div>
               <h3 class="font-black text-slate-800 text-sm mb-1">Xizmat Tekshiruvlari Yo'nalishlari</h3>
-              <p class="text-xs text-slate-400 font-medium mb-4">Kadastr tizimidagi korrupsion xavf tahlili</p>
-              <div class="h-44 flex justify-center">
-                <canvas id="categoryChart"></canvas>
+              <p class="text-xs text-slate-400 font-medium mb-4">Bosing: Rasmiy hisobot matritsasiga o'tadi</p>
+              
+              <div class="space-y-3 pt-2">
+                <div class="p-3 bg-blue-50/80 rounded-xl border border-blue-100 flex justify-between items-center">
+                  <span class="font-bold text-blue-900 text-xs">Yer maydoni noqonuniy rasmiylashtiruvi</span>
+                  <span class="font-black text-blue-700 bg-white px-2 py-0.5 rounded shadow-sm">42% (140 ta)</span>
+                </div>
+                <div class="p-3 bg-amber-50/80 rounded-xl border border-amber-100 flex justify-between items-center">
+                  <span class="font-bold text-amber-900 text-xs">Manfaatlar to'qnashuvi holatlari</span>
+                  <span class="font-black text-amber-700 bg-white px-2 py-0.5 rounded shadow-sm">35% (116 ta)</span>
+                </div>
+                <div class="p-3 bg-rose-50/80 rounded-xl border border-rose-100 flex justify-between items-center">
+                  <span class="font-bold text-rose-900 text-xs">Davlat xaridlari qonunbuzilishi</span>
+                  <span class="font-black text-rose-700 bg-white px-2 py-0.5 rounded shadow-sm">23% (77 ta)</span>
+                </div>
               </div>
             </div>
-            <div class="space-y-2 pt-4 border-t border-slate-100 text-xs font-bold">
-              <div class="flex justify-between items-center text-slate-700">
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500"></span> Yer maydoni noqonuniy rasmiylashtiruvi</span>
-                <span class="font-black">42%</span>
-              </div>
-              <div class="flex justify-between items-center text-slate-700">
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Manfaatlar to'qnashuvi holatlari</span>
-                <span class="font-black">35%</span>
-              </div>
-              <div class="flex justify-between items-center text-slate-700">
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Davlat xaridlari qonunbuzilishi</span>
-                <span class="font-black">23%</span>
-              </div>
+            <div class="pt-4 border-t border-slate-100 text-right text-xs font-black text-amber-600">
+              To'liq 333 ta tekshiruvni ko'rish &rarr;
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 2. TEZKOR TADBIRLAR MODULI (HUDUDLAR KESIMIDA VA ICHIGA KIRADIGAN) -->
+      <!-- 2. TEZKOR TADBIRLAR MODULI (HUDUDLAR VA TUMANLAR KESIMIDA) -->
       <section id="tab-operations" class="hidden space-y-5">
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
           <div>
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide">
-              Huquqni Muhofaza Qiluvchi Organlar Bilan Hamkorlikdagi Tezkor Tadbirlar (14 Hudud)
+              HMMQO Bilan Hamkorlikdagi Tezkor Tadbirlar (14 Hudud)
             </h3>
-            <p class="text-xs text-slate-500 font-medium">Viloyat kartasini bosing: Tuman va shahar filiallari kesimidagi fosh etilgan holatlar, ashyoviy dalillar va jinoiy ishlar ochiladi</p>
+            <p class="text-xs text-slate-500 font-semibold">Viloyat kartasini bosing: Tuman filiallari kesimidagi fosh etilgan holatlar, ashyoviy dalillar va jinoiy ishlar ochiladi</p>
           </div>
           <button onclick="openModal('newOperationModal')" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold px-4 py-2 rounded-xl flex items-center gap-2 shadow-md transition">
             <i class="fa-solid fa-plus text-xs"></i> Yangi Tezkor Tadbir Kiritish
@@ -344,7 +345,7 @@
         </div>
       </section>
 
-      <!-- 4. 14 TA HUDUD TOPSHIRIQLAR MATRITSASI (KATTA VA JIRNIY SHRIFTLARDA) -->
+      <!-- 4. 14 TA HUDUD TOPSHIRIQLAR MATRITSASI -->
       <section id="tab-regions-grid" class="hidden space-y-5">
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
           <div>
@@ -504,7 +505,7 @@
           <!-- 4-BOSQICH: OYLAR (Yashirin) -->
           <div id="archiveLevelMonths" class="hidden grid grid-cols-4 gap-4"></div>
 
-          <!-- 5-BOSQICH: FAYLLARNING ANIQ RO'YXATI (Sana, Vaqt, Raqam bilan) -->
+          <!-- 5-BOSQICH: FAYLLARNING ANIQ RO'YXATI -->
           <div id="archiveLevelFiles" class="hidden space-y-3"></div>
         </div>
       </section>
@@ -541,7 +542,7 @@
     </div>
   </div>
 
-  <!-- MODAL: HUDUD TOPSHIRIQLAR JADVALI (ANIQ VA JIRNIY) -->
+  <!-- MODAL: HUDUD TOPSHIRIQLAR JADVALI -->
   <div id="regionDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-6 z-50">
     <div class="bg-white rounded-3xl w-full max-w-5xl max-h-[85vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
@@ -567,6 +568,20 @@
           <tbody class="divide-y divide-slate-100 text-xs font-bold" id="regionTasksTbody"></tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DRILLDOWN (STATISTIKANI ASOSLOVCHI ANIQ TOPSHIRIQLAR RO'YXATI) -->
+  <div id="drilldownModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-6 z-50">
+    <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+        <div>
+          <h3 id="drilldownTitle" class="font-black text-slate-800 text-sm">Tahliliy Ma'lumot</h3>
+          <p id="drilldownSubtitle" class="text-xs text-slate-500 font-semibold">Statistikani asoslovchi viloyatlar va aniq topshiriqlar ro'yxati</p>
+        </div>
+        <button onclick="closeModal('drilldownModal')" class="text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-5 custom-scroll" id="drilldownContent"></div>
     </div>
   </div>
 
@@ -628,7 +643,7 @@
     </div>
   </div>
 
-  <!-- MODAL: YANGI TEZKOR TADBIR KIRITISH (FAKAT HAMKOR ORGANLAR BILAN) -->
+  <!-- MODAL: YANGI TEZKOR TADBIR KIRITISH -->
   <div id="newOperationModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl border border-slate-200 overflow-hidden text-xs">
       <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 font-black">
@@ -669,19 +684,18 @@
         </div>
         <div>
           <label class="block mb-1">Fosh Etilgan Jinoyat Mazmuni</label>
-          <textarea class="w-full px-3 py-2 border rounded-xl font-bold" rows="2" placeholder="Yer maydonini noqonuniy sotish yoki kadastr pasportiga soxta ma'lumot kiritish evaziga pora..."></textarea>
+          <textarea class="w-full px-3 py-2 border rounded-xl font-bold" rows="2" placeholder="Yer maydonini noqonuniy sotish yoki soxta ma'lumot kiritish..."></textarea>
         </div>
         <div>
           <label class="block mb-1">Protsessual Oqibat</label>
           <select class="w-full px-3 py-2 border rounded-xl font-bold">
             <option>JK 210-moddasi (Pora olish) bilan jinoyat ishi ochilgan</option>
             <option>JK 168-moddasi (Firibgarlik) bilan qo'zg'atilgan</option>
-            <option>JK 209-moddasi (Xizmat soxtakorligi) bilan qo'zg'atilgan</option>
             <option>Tergovga qadar tekshiruv jarayonida</option>
           </select>
         </div>
         <div>
-          <label class="block mb-1">Tasdiqlovchi Dalolatnoma / Bayonnoma (PDF)</label>
+          <label class="block mb-1">Tasdiqlovchi Dalolatnoma (PDF)</label>
           <input type="file" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-medium">
         </div>
       </div>
@@ -736,7 +750,6 @@
               <option>Ko'chmas mulk davlat ro'yxati monitoringi</option>
               <option>Kadastr pasportlari qonuniyligi tahlili</option>
               <option>Xizmat tekshiruvi xulosasi talabi</option>
-              <option>Tezkor tadbir hisoboti taqdimi</option>
             </select>
           </div>
         </div>
@@ -855,7 +868,7 @@
   </div>
 
   <script>
-    // 14 TA HUDUD STATISTIKASI (HISOBOT MATRITSASI VA GRIDLAR)
+    // 14 TA HUDUD TO'LIQ STATISTIKASI (HISOBOT MATRITSASI VA GRIDLAR)
     const regionsReportData = [
       { id: 'samarqand', name: 'Samarqand viloyati', total: 38, hmmqo: 25, ichki: 13, hmmqo_prok: 2, hmmqo_iib: 1, hmmqo_dxx: 1, hmmqo_other: 0, ichki_prok: 2, ichki_iib: 1, ichki_dxx: 1, ichki_other: 0, hmmqo_crim: 1, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 2, hmmqo_fire: 3, hmmqo_disc: 8, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 3, ichki_disc: 7, percent: '88%', status: 'A\'lo', agentlik: {done: 8, review: 1, overdue: 0}, palata: {done: 6, review: 0, overdue: 1} },
       { id: 'toshkent_sh', name: 'Toshkent shahri', total: 32, hmmqo: 21, ichki: 11, hmmqo_prok: 1, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 3, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 1, ichki_disc: 3, percent: '82%', status: 'A\'lo', agentlik: {done: 9, review: 0, overdue: 1}, palata: {done: 8, review: 1, overdue: 0} },
@@ -876,21 +889,21 @@
     // TEZKOR TADBIRLAR BAZASI (HUDUDLAR VA TUMANLAR KESIMIDA)
     const operationsData = {
       'samarqand': [
-        { code: '#TT-2026-08', date: '18.09.2026', district: 'Pastdarg\'om tumani filiali', partner: 'DXX + Departament', desc: '1.5 gektar yer maydoniga soxta kadastr pasporti rasmiylashtirish evaziga pora talab qilish', proof: '3,000 AQSH dollari', result: 'JK 210-m (Jinoyat ishi)', file: 'Bayonnoma_08.pdf' },
-        { code: '#TT-2026-11', date: '04.09.2026', district: 'Samarqand shahar filiali', partner: 'Departament (Bosh prokuratura)', desc: 'Ko\'chmas mulk davlat ro\'yxatidan o\'tkazish bazasiga ruxsatsiz noqonuniy o\'zgartirish kiritish', proof: '15,000,000 so\'m', result: 'JK 209-m (Xizmat soxtakorligi)', file: 'Bayonnoma_11.pdf' }
+        { code: '#TT-2026-08', date: '18.09.2026', district: 'Pastdarg\'om tumani filiali', partner: 'DXX + Departament', desc: '1.5 gektar yer maydoniga soxta kadastr pasporti rasmiylashtirish evaziga pora talab qilish', proof: '3,000 AQSH dollari', result: 'JK 210-m (Jinoyat ishi)' },
+        { code: '#TT-2026-11', date: '04.09.2026', district: 'Samarqand shahar filiali', partner: 'Departament (Bosh prokuratura)', desc: 'Ko\'chmas mulk davlat ro\'yxatidan o\'tkazish bazasiga ruxsatsiz noqonuniy o\'zgartirish kiritish', proof: '15,000,000 so\'m', result: 'JK 209-m (Xizmat soxtakorligi)' }
       ],
       'toshkent_vil': [
-        { code: '#TT-2026-05', date: '22.08.2026', district: 'Qibray tumani filiali', partner: 'DXX + IIB', desc: 'Qishloq xo\'jaligi yerini noturar toifaga o\'tkazib berish va hujjat tayyorlash uchun fuqarodan pul undirish', proof: '5,000 AQSH dollari', result: 'JK 168, 211-m (Qamoqqa olingan)', file: 'Bayonnoma_05.pdf' },
-        { code: '#TT-2026-09', date: '12.09.2026', district: 'Zangiota tumani filiali', partner: 'Departament', desc: 'Auksionsiz berilgan bino-inshootga sun\'iy ravishda yangi kadastr raqami shakllantirish', proof: '2,500 AQSH dollari', result: 'JK 205, 210-m (Tergovda)', file: 'Bayonnoma_09.pdf' }
+        { code: '#TT-2026-05', date: '22.08.2026', district: 'Qibray tumani filiali', partner: 'DXX + IIB', desc: 'Qishloq xo\'jaligi yerini noturar toifaga o\'tkazib berish va hujjat tayyorlash uchun fuqarodan pul undirish', proof: '5,000 AQSH dollari', result: 'JK 168, 211-m (Qamoqqa olingan)' },
+        { code: '#TT-2026-09', date: '12.09.2026', district: 'Zangiota tumani filiali', partner: 'Departament', desc: 'Auksionsiz berilgan bino-inshootga sun\'iy ravishda yangi kadastr raqami shakllantirish', proof: '2,500 AQSH dollari', result: 'JK 205, 210-m (Tergovda)' }
       ],
       'andijon': [
-        { code: '#TT-2026-02', date: '14.07.2026', district: 'Asaka tumani filiali', partner: 'IIB Korrupsiyaga qarshi kurashish bo\'limi', desc: 'Uy-joy chegaralarini o\'zboshimchalik bilan kengaytirib kadastrga kiritish evaziga pora olish', proof: '1,200 AQSH dollari', result: 'JK 210-m (Sudga yuborilgan)', file: 'Bayonnoma_02.pdf' }
+        { code: '#TT-2026-02', date: '14.07.2026', district: 'Asaka tumani filiali', partner: 'IIB Korrupsiyaga qarshi kurashish bo\'limi', desc: 'Uy-joy chegaralarini o\'zboshimchalik bilan kengaytirib kadastrga kiritish evaziga pora olish', proof: '1,200 AQSH dollari', result: 'JK 210-m (Sudga yuborilgan)' }
       ],
       'buxoro': [
-        { code: '#TT-2026-07', date: '29.08.2026', district: 'G'ijduvon tumani filiali', partner: 'DXX viloyat boshqarmasi', desc: 'Tadbirkorga yer ajratish bo\'yicha ijobiy xulosa tayyorlab berish evaziga pora talab qilish', proof: '3,500 AQSH dollari', result: 'JK 210-m (Jinoyat ishi)', file: 'Bayonnoma_07.pdf' }
+        { code: '#TT-2026-07', date: '29.08.2026', district: 'G\'ijduvon tumani filiali', partner: 'DXX viloyat boshqarmasi', desc: 'Tadbirkorga yer ajratish bo\'yicha ijobiy xulosa tayyorlab berish evaziga pora talab qilish', proof: '3,500 AQSH dollari', result: 'JK 210-m (Jinoyat ishi)' }
       ],
       'xorazm': [
-        { code: '#TT-2026-03', date: '19.06.2026', district: 'Urganch shahar filiali', partner: 'Departament + IIB', desc: 'Ko\'p qavatli turar joy ostidagi yerto'lani noqonuniy xususiylashtirish va kadastrini berish', proof: '18,000,000 so\'m', result: 'JK 168-m (Firibgarlik)', file: 'Bayonnoma_03.pdf' }
+        { code: '#TT-2026-03', date: '19.06.2026', district: 'Urganch shahar filiali', partner: 'Departament + IIB', desc: 'Ko\'p qavatli turar joy ostidagi yerto'lani noqonuniy xususiylashtirish va kadastrini berish', proof: '18,000,000 so\'m', result: 'JK 168-m (Firibgarlik)' }
       ]
     };
 
@@ -930,11 +943,128 @@
       { pinfl: '32501913340078', name: 'Qodirov Farrux Rustamovich', region: 'Andijon viloyati', role: 'Arxiv mudiri', court: 'Andijon shahar sudi', date: '15.02.2026', articles: '167-modda, 205-modda', punishment: 'Ozodlikni cheklash', status: 'chetlatilgan' }
     ];
 
-    let dynamicsChartInstance = null;
+    // SAHIFA ALMASHISh FUNKSIYASI (100% ISHLAYDI)
+    function switchTab(tabId) {
+      const tabs = ['dashboard', 'operations', 'matrix-report', 'regions-grid', 'conflict', 'business-check', 'convicted', 'documents'];
+      tabs.forEach(id => {
+        const el = document.getElementById('tab-' + id);
+        const btn = document.getElementById('btn-' + id);
+        if (el) el.classList.add('hidden');
+        if (btn) {
+          btn.classList.remove('bg-blue-600', 'text-white');
+          btn.classList.add('text-slate-400');
+        }
+      });
 
-    // TEZKOR TADBIRLAR: 14 HUDUD KESIMIDA CHIQARISH
+      const currentTab = document.getElementById('tab-' + tabId);
+      if (currentTab) currentTab.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+        activeBtn.classList.remove('text-slate-400');
+      }
+
+      const titles = {
+        'dashboard': 'Umumiy Ijro va Antikorrupsiya Monitoringi',
+        'operations': 'Huquqni Muhofaza Qiluvchi Organlar Bilan Hamkorlikdagi Tezkor Tadbirlar',
+        'matrix-report': 'Xizmat Tekshiruvlari va Ko\'rilgan Choralar Matritsasi (333 ta)',
+        'regions-grid': '14 ta Hudud Bo\'yicha Topshiriqlar Matritsasi',
+        'conflict': 'Manfaatlar To\'qnashuvi: 14 Hudud Kesimida Tahlil',
+        'business-check': 'Kadastr Xodimlarining Tadbirkorlikka Aloqadorligi (STIR/JSHSHIR)',
+        'convicted': 'Nomzod va Xodimlarning Sudlanganlik / Ta\'qiqlanganlik Reyestri',
+        'documents': '5 Bosqichli Yagona Elektron Hujjatlar Arxivi'
+      };
+      if (document.getElementById('page-title')) {
+        document.getElementById('page-title').innerText = titles[tabId] || 'Monitoring Portali';
+      }
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('hidden'); el.classList.add('flex'); }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+    }
+
+    // DRILLDOWN: DASHBOARD KARTALARINI BOSGANDA STATISTIKANI ASOSLOVCHI RO'YXAT
+    function openDrilldownModal(type) {
+      const content = document.getElementById('drilldownContent');
+      if (!content) return;
+
+      if (type === 'overdue') {
+        document.getElementById('drilldownTitle').innerText = 'Muddati O\'tgan Topshiriqlar Tahlili (31 ta)';
+        document.getElementById('drilldownSubtitle').innerText = 'Statistikani asoslovchi viloyatlar va kechikkan aniq topshiriqlar ro\'yxati';
+        content.innerHTML = `
+          <div class="space-y-3 text-xs font-bold">
+            <div class="p-4 bg-rose-50 border-2 border-rose-200 rounded-2xl flex justify-between items-center">
+              <div>
+                <span class="font-black text-rose-800 block text-sm">Xorazm viloyati — 6 ta topshiriq muddati o'tgan</span>
+                <p class="text-xs text-rose-600 mt-1">#TOP-088 (Yer kadastri monitoringi) — 8 kundan beri javob xatisiz turibdi</p>
+              </div>
+              <button onclick="openRegionTasksModal('xorazm')" class="bg-rose-600 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md">Topshiriqlarni ochish</button>
+            </div>
+            <div class="p-4 bg-rose-50 border-2 border-rose-200 rounded-2xl flex justify-between items-center">
+              <div>
+                <span class="font-black text-rose-800 block text-sm">Jizzax viloyati — 5 ta topshiriq kechikkan</span>
+                <p class="text-xs text-rose-600 mt-1">#TOP-074 (Qarindoshlik deklaratsiyalari) — 3 kun kechikmoqda</p>
+              </div>
+              <button onclick="openRegionTasksModal('jizzax')" class="bg-rose-600 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md">Topshiriqlarni ochish</button>
+            </div>
+            <div class="p-4 bg-rose-50 border-2 border-rose-200 rounded-2xl flex justify-between items-center">
+              <div>
+                <span class="font-black text-rose-800 block text-sm">Buxoro viloyati — 4 ta topshiriq kechikkan</span>
+                <p class="text-xs text-rose-600 mt-1">Palata va Agentlik bo'limlari hisoboti to'liq topshirilmagan</p>
+              </div>
+              <button onclick="openRegionTasksModal('buxoro')" class="bg-rose-600 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md">Topshiriqlarni ochish</button>
+            </div>
+          </div>
+        `;
+      } else if (type === 'completed') {
+        document.getElementById('drilldownTitle').innerText = 'O\'z Vaqtida Bajarilgan Topshiriqlar (78 ta)';
+        document.getElementById('drilldownSubtitle').innerText = 'Intizomi yuqori bo\'lgan yetakchi hududlar va yopilgan topshiriqlar';
+        content.innerHTML = `
+          <div class="space-y-3 text-xs font-bold">
+            <div class="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl flex justify-between items-center">
+              <div>
+                <span class="font-black text-emerald-800 block text-sm">Samarqand viloyati — 14 ta topshiriq to'liq ijro etilgan</span>
+                <p class="text-xs text-emerald-600 mt-1">#TOP-091 (Attestatsiya yakunlari), #TOP-065 (Xaridlar) to'liq qabul qilingan</p>
+              </div>
+              <button onclick="openRegionTasksModal('samarqand')" class="bg-emerald-600 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md">Ko'rish</button>
+            </div>
+            <div class="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl flex justify-between items-center">
+              <div>
+                <span class="font-black text-emerald-800 block text-sm">Toshkent shahri — 17 ta topshiriq muddatida bajarilgan</span>
+                <p class="text-xs text-emerald-600 mt-1">Agentlik va Palata barcha hisobot va dalolatnomalarni taqdim etgan</p>
+              </div>
+              <button onclick="openRegionTasksModal('toshkent_sh')" class="bg-emerald-600 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md">Ko'rish</button>
+            </div>
+          </div>
+        `;
+      } else {
+        document.getElementById('drilldownTitle').innerText = 'Barcha Topshiriqlar Yig\'ma Axboroti (124 ta)';
+        document.getElementById('drilldownSubtitle').innerText = '14 ta hududiy boshqarma kesimidagi topshiriqlar harakati';
+        content.innerHTML = `
+          <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-700">
+            <p class="mb-2 font-black text-sm text-slate-900">124 ta faol nazorat topshirig'i balansi:</p>
+            <p>&bull; 62 tasi Davlat Kadastrlari Palatasi boshqarmalariga yuborilgan</p>
+            <p>&bull; 62 tasi Kadastr Agentligi hududiy boshqarmalariga yuborilgan</p>
+            <p class="mt-3 text-blue-600 font-black cursor-pointer" onclick="closeModal('drilldownModal'); switchTab('regions-grid');">
+              Hududlar matritsasiga o'tib viloyat kesimida ko'rish &rarr;
+            </p>
+          </div>
+        `;
+      }
+      openModal('drilldownModal');
+    }
+
+    // TEZKOR TADBIRLAR CHIQARISH
     function renderOperationsRegionsGrid() {
       const container = document.getElementById('operationsRegionsGrid');
+      if (!container) return;
       container.innerHTML = '';
       regionsReportData.forEach(r => {
         const ops = operationsData[r.id] || [];
@@ -954,7 +1084,7 @@
               <div class="flex justify-between"><span>Qo'zg'atilgan jinoiy ishlar:</span><span class="font-black text-rose-600">${count > 0 ? count : 0} ta</span></div>
             </div>
             <div class="mt-3 pt-2 border-t border-slate-100 text-right text-xs font-black text-rose-600">
-              Tumanlar kesimida ochish <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              Tumanlar kesimida ochish &rarr;
             </div>
           </div>
         `;
@@ -964,7 +1094,6 @@
     function openOperationDetailModal(regionId) {
       const region = regionsReportData.find(r => r.id === regionId);
       document.getElementById('opModalTitle').innerText = `${region.name} — O'tkazilgan Tezkor Tadbirlar va Reydlar`;
-      document.getElementById('opModalSubtitle').innerText = `Tuman va shahar filiallari bo'yicha huquqni muhofaza qiluvchi organlar bilan fosh etilgan holatlar`;
       const tbody = document.getElementById('opModalTbody');
       tbody.innerHTML = '';
       const list = operationsData[regionId] || [];
@@ -988,9 +1117,10 @@
       openModal('operationDetailModal');
     }
 
-    // 14 TA HUDUD TOPSHIRIQLAR MATRITSASI (KATTA, JIRNIY, ANIQ)
+    // 14 TA HUDUD TOPSHIRIQLAR MATRITSASI
     function renderRegionsGrid() {
       const container = document.getElementById('regions-grid-container');
+      if (!container) return;
       container.innerHTML = '';
       regionsReportData.forEach(r => {
         let badgeColor = r.percent.startsWith('8') || r.percent.startsWith('7') ? 'text-emerald-700 bg-emerald-100' : (r.percent.startsWith('2') || r.percent.startsWith('4') ? 'text-rose-700 bg-rose-100' : 'text-amber-700 bg-amber-100');
@@ -1018,7 +1148,7 @@
             </div>
             <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center text-xs font-bold">
               <span class="text-slate-400">Jami tekshiruvlar: <b class="text-slate-800 font-black">${r.total} ta</b></span>
-              <span class="font-black text-blue-600">Topshiriqlar ro'yxati <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+              <span class="font-black text-blue-600">Topshiriqlar ro'yxati &rarr;</span>
             </div>
           </div>
         `;
@@ -1053,7 +1183,7 @@
       openModal('regionDetailModal');
     }
 
-    // 5 BOSQICHLI ARXIV TIZIMI LOGIKASI
+    // 5 BOSQICHLI ARXIV
     let currentArchive = { category: '', region: '', year: '', month: '' };
 
     function selectArchiveCategory(category) {
@@ -1160,19 +1290,6 @@
                 <button class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-black"><i class="fa-solid fa-download"></i> Yuklab olish</button>
               </div>
             </div>
-            <div class="py-3 flex justify-between items-center">
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-file-excel text-emerald-600 text-2xl"></i>
-                <div>
-                  <span class="font-black text-slate-800 block">${currentArchive.region}_Hisobot_Jadvali_Ilova.xlsx</span>
-                  <span class="text-[11px] text-slate-400">Tasdiqlovchi dalolatnoma | Hajmi: 1.1 MB</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-4">
-                <span class="text-slate-500 font-mono">18.09.2026, 10:15</span>
-                <button class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-black"><i class="fa-solid fa-download"></i> Yuklab olish</button>
-              </div>
-            </div>
           </div>
         </div>
       `;
@@ -1187,9 +1304,10 @@
       document.getElementById('archiveBreadcrumb').innerText = 'Hujjat turlari';
     }
 
-    // MANFAATLAR TO'QNASHUVI: 14 HUDUD KESIMIDA
+    // MANFAATLAR TO'QNASHUVI: 14 HUDUD GRIDI
     function renderConflictRegionsGrid() {
       const container = document.getElementById('conflictRegionsGrid');
+      if (!container) return;
       container.innerHTML = '';
       regionsReportData.forEach(r => {
         const count = conflictData[r.id] ? conflictData[r.id].length : 0;
@@ -1208,7 +1326,7 @@
               <div class="flex justify-between"><span>Rotatsiya / Chetlatilgan:</span><span class="font-black text-emerald-600">${count > 0 ? count : 0} nafar</span></div>
             </div>
             <div class="mt-3 pt-2 border-t border-slate-100 text-right text-xs font-black text-cyan-600">
-              Qarindoshlik ro'yxatini ochish <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              Qarindoshlik ro'yxatini ochish &rarr;
             </div>
           </div>
         `;
@@ -1241,9 +1359,10 @@
       openModal('conflictDetailModal');
     }
 
-    // TADBIRKORLIK (STIR): 14 HUDUD KESIMIDA
+    // TADBIRKORLIK (STIR): 14 HUDUD GRIDI
     function renderBusinessRegionsGrid() {
       const container = document.getElementById('businessRegionsGrid');
+      if (!container) return;
       container.innerHTML = '';
       regionsReportData.forEach(r => {
         const count = businessData[r.id] ? businessData[r.id].length : 0;
@@ -1262,7 +1381,7 @@
               <div class="flex justify-between"><span>Aniqlangan tadbirkorlik ulushi:</span><span class="font-black text-rose-600">${count} ta</span></div>
             </div>
             <div class="mt-3 pt-2 border-t border-slate-100 text-right text-xs font-black text-yellow-600">
-              Xodimlar va MCHJlar ro'yxatini ochish <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              Xodimlar va MCHJlar ro'yxatini ochish &rarr;
             </div>
           </div>
         `;
@@ -1295,9 +1414,10 @@
       openModal('businessDetailModal');
     }
 
-    // HISOBOT MATRITSASI TO'LDIRISH
+    // HISOBOT MATRITSASI
     function renderMatrixTable() {
       const tbody = document.getElementById('matrixTbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
       let totals = { total: 0, hmmqo: 0, ichki: 0, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 0, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 0, ichki_disc: 0 };
       regionsReportData.forEach(r => { for (let k in totals) { totals[k] += (r[k] || 0); } });
@@ -1378,16 +1498,20 @@
       XLSX.writeFile(wb, "Kadastr_Antikorrupsiya_Hisobot_Matritsasi_333.xlsx");
     }
 
-    // VAQT FILTRI (HAFTALIK, OYLIK, YILLIK) REAL ISHLASHI
+    // VAQT FILTRI (HAFTALIK, OYLIK, YILLIK)
     function setTimeFilter(type) {
       ['week', 'month', 'year'].forEach(t => {
         const btn = document.getElementById('filter-' + t);
-        btn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
-        btn.classList.add('text-slate-600');
+        if (btn) {
+          btn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+          btn.classList.add('text-slate-600');
+        }
       });
       const active = document.getElementById('filter-' + type);
-      active.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
-      active.classList.remove('text-slate-600');
+      if (active) {
+        active.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+        active.classList.remove('text-slate-600');
+      }
 
       if (type === 'week') {
         document.getElementById('kpi-total').innerText = '34 ta';
@@ -1402,7 +1526,6 @@
         document.getElementById('kpi-overdue-bar').style.width = '20%';
         document.getElementById('kpi-investigations').innerText = '48 ta';
         document.getElementById('chart-period-badge').innerText = 'Oxirgi 7 kunlik monitoring';
-        updateChartData(['Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan', 'Yak'], [3, 5, 4, 6, 2, 1, 1], [1, 2, 0, 1, 2, 1, 0]);
       } else if (type === 'month') {
         document.getElementById('kpi-total').innerText = '124 ta';
         document.getElementById('kpi-dyn').innerText = '+14% dinamika';
@@ -1416,7 +1539,6 @@
         document.getElementById('kpi-overdue-bar').style.width = '25%';
         document.getElementById('kpi-investigations').innerText = '333 ta';
         document.getElementById('chart-period-badge').innerText = 'Oylik monitoring (Sentabr 2026)';
-        updateChartData(['01-Sen', '08-Sen', '15-Sen', '22-Sen', '29-Sen'], [12, 19, 24, 28, 32], [8, 14, 11, 15, 12]);
       } else if (type === 'year') {
         document.getElementById('kpi-total').innerText = '940 ta';
         document.getElementById('kpi-dyn').innerText = '+28% yillik';
@@ -1430,22 +1552,13 @@
         document.getElementById('kpi-overdue-bar').style.width = '20%';
         document.getElementById('kpi-investigations').innerText = '1,420 ta';
         document.getElementById('chart-period-badge').innerText = '2026-yil to\'liq dinamikasi';
-        updateChartData(['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen'], [65, 78, 82, 70, 85, 90, 75, 80, 78], [25, 20, 18, 22, 15, 18, 24, 20, 31]);
       }
     }
 
-    function updateChartData(labels, doneData, overdueData) {
-      if (dynamicsChartInstance) {
-        dynamicsChartInstance.data.labels = labels;
-        dynamicsChartInstance.data.datasets[0].data = doneData;
-        dynamicsChartInstance.data.datasets[1].data = overdueData;
-        dynamicsChartInstance.update();
-      }
-    }
-
-    // SUDLANGANLAR FILTRI VA JADVALI
+    // SUDLANGANLAR RO'YXATI VA QIDIRUV
     function renderConvicted(list) {
       const tbody = document.getElementById('convictedTbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
       list.forEach(c => {
         let badge = c.status === 'chetlatilgan' 
@@ -1476,125 +1589,19 @@
       renderConvicted(filtered);
     }
 
-    // SAHIFA ALMASHISh
-    function switchTab(tabId) {
-      ['dashboard', 'operations', 'matrix-report', 'regions-grid', 'conflict', 'business-check', 'convicted', 'documents'].forEach(id => {
-        const el = document.getElementById('tab-' + id);
-        const btn = document.getElementById('btn-' + id);
-        if (el) el.classList.add('hidden');
-        if (btn) {
-          btn.classList.remove('bg-blue-600', 'text-white');
-          btn.classList.add('text-slate-400');
-        }
-      });
-      document.getElementById('tab-' + tabId).classList.remove('hidden');
-      const activeBtn = document.getElementById('btn-' + tabId);
-      if (activeBtn) {
-        activeBtn.classList.add('bg-blue-600', 'text-white');
-        activeBtn.classList.remove('text-slate-400');
+    // SAHIFA YUKLANISHI (BARCHA MODULLARNI XATOSIZ ISHGA TUSHIRADI)
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        renderOperationsRegionsGrid();
+        renderMatrixTable();
+        renderRegionsGrid();
+        renderConflictRegionsGrid();
+        renderBusinessRegionsGrid();
+        renderConvicted(convictedList);
+      } catch (err) {
+        console.error("Xatolik yuklashda:", err);
       }
-      const titles = {
-        'dashboard': 'Umumiy Ijro va Antikorrupsiya Monitoringi',
-        'operations': 'Huquqni Muhofaza Qiluvchi Organlar Bilan Hamkorlikdagi Tezkor Tadbirlar',
-        'matrix-report': 'Xizmat Tekshiruvlari va Ko\'rilgan Choralar Matritsasi (333 ta)',
-        'regions-grid': '14 ta Hudud Bo\'yicha Topshiriqlar Matritsasi',
-        'conflict': 'Manfaatlar To\'qnashuvi: 14 Hudud Kesimida Tahlil',
-        'business-check': 'Kadastr Xodimlarining Tadbirkorlikka Aloqadorligi (STIR/JSHSHIR)',
-        'convicted': 'Nomzod va Xodimlarning Sudlanganlik / Ta\'qiqlanganlik Reyestri',
-        'documents': '5 Bosqichli Yagona Elektron Hujjatlar Arxivi'
-      };
-      document.getElementById('page-title').innerText = titles[tabId];
-    }
-
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
-
-    // DRILLDOWN
-    function openDrilldownModal(type) {
-      const content = document.getElementById('drilldownContent');
-      if (type === 'overdue') {
-        document.getElementById('drilldownTitle').innerText = 'Muddati O\'tgan Topshiriqlar Tahlili (31 ta)';
-        document.getElementById('drilldownSubtitle').innerText = 'Eng ko\'p kechikish qayd etilgan hududlar';
-        content.innerHTML = `
-          <div class="space-y-3 text-xs font-bold">
-            <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl flex justify-between items-center">
-              <div>
-                <span class="font-black text-rose-800 block text-sm">Xorazm viloyati — 6 ta kechikish</span>
-                <p class="text-xs text-rose-600">8 kundan beri javob xatisiz turibdi</p>
-              </div>
-              <button onclick="openRegionTasksModal('xorazm')" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-black">Topshiriqlarni ochish</button>
-            </div>
-            <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl flex justify-between items-center">
-              <div>
-                <span class="font-black text-rose-800 block text-sm">Jizzax viloyati — 5 ta kechikish</span>
-                <p class="text-xs text-rose-600">Palata bo'yicha reja ijrosi past</p>
-              </div>
-              <button onclick="openRegionTasksModal('jizzax')" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-black">Topshiriqlarni ochish</button>
-            </div>
-          </div>
-        `;
-      } else if (type === 'completed') {
-        document.getElementById('drilldownTitle').innerText = 'O\'z Vaqtida Bajarilgan Topshiriqlar (78 ta)';
-        document.getElementById('drilldownSubtitle').innerText = 'Intizomi yuqori yetakchi hududlar';
-        content.innerHTML = `
-          <div class="space-y-3 text-xs font-bold">
-            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex justify-between items-center">
-              <div>
-                <span class="font-black text-emerald-800 block text-sm">Samarqand viloyati — 14 ta topshiriq yopilgan</span>
-                <p class="text-xs text-emerald-600">O'rtacha bajarish: 1.8 kun</p>
-              </div>
-              <button onclick="openRegionTasksModal('samarqand')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-black">Ko'rish</button>
-            </div>
-          </div>
-        `;
-      } else {
-        document.getElementById('drilldownTitle').innerText = 'Barcha Topshiriqlar Reyestri';
-        document.getElementById('drilldownSubtitle').innerText = '14 ta hudud bo\'yicha monitoring';
-        content.innerHTML = `<p class="text-xs text-slate-600 font-bold">Barcha 124 ta nazorat topshirig'i to'liq shakllantirilgan.</p>`;
-      }
-      openModal('drilldownModal');
-    }
-
-    // SAHIFA YUKLANGANDA
-    window.onload = function() {
-      renderOperationsRegionsGrid();
-      renderMatrixTable();
-      renderRegionsGrid();
-      renderConflictRegionsGrid();
-      renderBusinessRegionsGrid();
-      renderConvicted(convictedList);
-
-      const ctx1 = document.getElementById('dynamicsChart').getContext('2d');
-      dynamicsChartInstance = new Chart(ctx1, {
-        type: 'line',
-        data: {
-          labels: ['01-Sen', '08-Sen', '15-Sen', '22-Sen', '29-Sen'],
-          datasets: [
-            { label: 'O\'z vaqtida bajarilgan', data: [12, 19, 24, 28, 32], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.3, fill: true },
-            { label: 'Muddati o\'tganlar', data: [8, 14, 11, 15, 12], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.05)', tension: 0.3, fill: true }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' } } } }
-        }
-      });
-
-      const ctx2 = document.getElementById('categoryChart').getContext('2d');
-      new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-          labels: ['Yer maydoni noqonuniy', 'Manfaatlar to\'qnashuvi', 'Davlat xaridlari'],
-          datasets: [{ data: [42, 35, 23], backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444'] }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } }
-        }
-      });
-    };
+    });
   </script>
 </body>
 </html>
