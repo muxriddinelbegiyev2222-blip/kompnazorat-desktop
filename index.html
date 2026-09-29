@@ -7,9 +7,9 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-    body { background-color: #f1f5f9; color: #0f172a; display: flex; height: 100vh; overflow: hidden; font-size: 13px; -webkit-font-smoothing: antialiased; }
+    body { background-color: #f1f5f9; color: #0f172a; display: flex; height: 100vh; overflow: hidden; font-size: 13px; }
 
-    /* YON PANEL */
+    /* YON PANEL (PROKURATURA / DXX USLUBIDA) */
     aside { width: 280px; background-color: #0b132b; color: #cbd5e1; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; border-right: 1px solid #1e293b; }
     .brand { height: 65px; display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid #1e293b; gap: 12px; background: #070d1e; }
     .brand-icon { width: 38px; height: 38px; border-radius: 8px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; border: 1px solid #3b82f6; }
@@ -49,11 +49,11 @@
     .hidden { display: none !important; }
 
     /* KARTALAR */
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    .card { background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #cbd5e1; cursor: pointer; transition: all 0.2s; position: relative; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .card { background: #ffffff; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; cursor: pointer; transition: all 0.2s; position: relative; }
     .card:hover { border-color: #1d4ed8; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .card-title { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 6px; }
-    .card-val { font-size: 26px; font-weight: 800; color: #0b132b; }
+    .card-val { font-size: 24px; font-weight: 800; color: #0b132b; }
     .card-sub { font-size: 11px; font-weight: 600; color: #64748b; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 8px; display: flex; justify-content: space-between; }
 
     .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -69,6 +69,14 @@
 
     .matrix-tbl th, .matrix-tbl td { border: 1px solid #cbd5e1; text-align: center; font-size: 10px; padding: 5px; }
     .matrix-tbl th { background: #f1f5f9; font-weight: 700; }
+
+    /* DIAGRAMMA STRUKTURASI */
+    .chart-container { display: flex; align-items: flex-end; justify-content: space-between; height: 160px; padding: 10px 20px 0 20px; gap: 20px; border-bottom: 2px solid #cbd5e1; }
+    .chart-bar-group { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; gap: 8px; }
+    .chart-bar { width: 100%; max-width: 48px; border-radius: 6px 6px 0 0; transition: height 0.5s ease; position: relative; }
+    .chart-bar:hover { filter: brightness(1.1); }
+    .chart-bar-val { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+    .chart-bar-label { font-size: 11px; font-weight: 700; color: #475569; margin-top: 8px; }
 
     /* MODAL */
     .modal-overlay { position: fixed; inset: 0; background: rgba(11, 19, 43, 0.7); display: flex; align-items: center; justify-content: center; z-index: 50; }
@@ -163,10 +171,17 @@
 
     <div class="content-area">
 
-      <!-- 1. DASHBOARD -->
+      <!-- 1. DASHBOARD TABI -->
       <section id="tab-dashboard" class="tab-section">
         
+        <!-- 5 TA ASOSIY KO'RSATKICH (XIZMAT TEKSHIRUVLARI HAM QO'SHILDI) -->
         <div class="kpi-grid">
+          <div onclick="startDrillFlow('investigations')" class="card" style="border-left: 4px solid #d97706;">
+            <div class="card-title">Xizmat Tekshiruvlari</div>
+            <div class="card-val" id="kpi-investigations" style="color: #d97706;">333 ta</div>
+            <div class="card-sub"><span>HMMQO: 209 | Ichki: 124</span><b style="color: #d97706;">Hudud &rarr; PDF Xulosa</b></div>
+          </div>
+
           <div onclick="startDrillFlow('convicted')" class="card" style="border-left: 4px solid #be123c;">
             <div class="card-title">Sudlangan Xodimlar</div>
             <div class="card-val" id="kpi-convicted" style="color: #be123c;">18 nafar</div>
@@ -174,45 +189,49 @@
           </div>
 
           <div onclick="startDrillFlow('operations')" class="card" style="border-left: 4px solid #1d4ed8;">
-            <div class="card-title">Tezkor Tadbirlarda Fosh Etilganlar</div>
+            <div class="card-title">Tezkor Tadbirlar</div>
             <div class="card-val" id="kpi-operations" style="color: #1d4ed8;">14 ta</div>
             <div class="card-sub"><span>DXX/Departament/IIB</span><b style="color: #1d4ed8;">Hudud &rarr; PDF Bayonnoma</b></div>
           </div>
 
-          <div onclick="startDrillFlow('risk')" class="card" style="border-left: 4px solid #d97706;">
-            <div class="card-title">Korrupsion Xavf Guruhlari (A, B, D)</div>
-            <div class="card-val" id="kpi-risk" style="color: #d97706;">46 nafar</div>
-            <div class="card-sub"><span>A: 18 | B: 16 | D: 12</span><b style="color: #d97706;">Hudud &rarr; PDF Xulosa</b></div>
+          <div onclick="startDrillFlow('risk')" class="card" style="border-left: 4px solid #b45309;">
+            <div class="card-title">Xavf Guruhlari (A, B, D)</div>
+            <div class="card-val" id="kpi-risk" style="color: #b45309;">46 nafar</div>
+            <div class="card-sub"><span>A: 18 | B: 16 | D: 12</span><b style="color: #b45309;">Hudud &rarr; PDF Dosye</b></div>
           </div>
 
           <div onclick="startDrillFlow('fired')" class="card" style="border-left: 4px solid #047857;">
-            <div class="card-title">Komplayens Tashabbusi Bilan Bo'shatilgan</div>
+            <div class="card-title">Komplayens Tashabbusi Bilan</div>
             <div class="card-val" id="kpi-fired" style="color: #047857;">25 nafar</div>
-            <div class="card-sub"><span>Xizmat tekshiruvi xulosasi</span><b style="color: #047857;">Hudud &rarr; PDF Buyruq</b></div>
+            <div class="card-sub"><span>Bo'shatilgan xodimlar</span><b style="color: #047857;">Hudud &rarr; PDF Buyruq</b></div>
           </div>
         </div>
 
-        <!-- JINOYATCHILIK VA QONUNBUZILISH DINAMIKASI DIAGRAMMASI -->
+        <!-- JINOYATCHILIK VA QONUNBUZILISH DINAMIKASI DIAGRAMMASI (O'SISh VA PASAYISh) -->
         <div class="box">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
             <div>
-              <h3 style="font-size: 13px; font-weight: 700;">Jinoyatchilik va Huquqbuzarliklar Dinamikasi (Oyma-oy va Yilma-yil O'sish / Pasayish)</h3>
-              <p style="font-size: 11px; color: #64748b; font-weight: 500;">Tezkor tadbirlar, xizmat tekshiruvlari va javobgarlikka tortilgan xodimlar hisobi</p>
+              <h3 style="font-size: 13px; font-weight: 700;">Jinoyatchilik va Huquqbuzarliklar Dinamikasi (Oyma-oy O'sish / Pasayish)</h3>
+              <p style="font-size: 11px; color: #64748b; font-weight: 500;">Qonunbuzilish faktlari, tezkor tadbirlar va tekshiruvlar ko'rsatkichi grafigi</p>
             </div>
-            <span id="chart-badge" class="badge badge-blue">Oylik Dinamika (2026-yil)</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <span style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600;"><span style="width: 10px; height: 10px; background: #1d4ed8; border-radius: 2px;"></span> O'rtacha ko'rsatkich</span>
+              <span style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600;"><span style="width: 10px; height: 10px; background: #be123c; border-radius: 2px;"></span> O'sish (Yuqori xavf)</span>
+              <span id="chart-badge" class="badge badge-blue">Oylik Dinamika (2026-yil)</span>
+            </div>
           </div>
 
-          <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; height: 130px; gap: 14px;" id="chartBarsContainer"></div>
+          <div style="background: #f8fafc; padding: 16px 16px 8px 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <div class="chart-container" id="chartBarsContainer"></div>
           </div>
         </div>
 
-        <!-- PASTKI HUDUDLAR VA MATRITSA LINKI -->
-        <div style="display: grid; grid-template-columns: 2fr 1.2fr; gap: 16px;">
+        <!-- PASTKI HUDUDLAR RO'YXATI -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
           <div class="box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
               <div>
-                <h3 style="font-size: 13px; font-weight: 700;">Hududlar Kesimida Korrupsion Xavf va Fosh Etilgan Ishlar</h3>
+                <h3 style="font-size: 13px; font-weight: 700;">Hududlar Kesimida Xavf va Fosh Etilgan Ishlar (14 Hudud)</h3>
                 <p style="font-size: 11px; color: #64748b; font-weight: 500;">Viloyatni tanlang — uning barcha ishlari va PDF hujjatlari ochiladi</p>
               </div>
               <span class="badge badge-rose">14 ta Hudud</span>
@@ -270,7 +289,7 @@
                 <td>Samarqand viloyati</td>
                 <td><span class="badge badge-blue">Agentlik</span></td>
                 <td>17.09.2026</td>
-                <td style="color: #047857; font-weight: 700;">24.09.2026 (Yetib keldi)</td>
+                <td style="color: #047857; font-weight: 700;">24.09.2026</td>
                 <td><span class="badge badge-emerald">Bajarildi</span></td>
                 <td style="text-align: center;"><button onclick="openPdfViewer('operation', '#TOP-091', 'Samarqand', '24.09.2026', 'Attestatsiya yakunlari')" class="btn btn-slate" style="padding: 4px 8px;">Ko'rish</button></td>
               </tr>
@@ -279,7 +298,7 @@
                 <td>Xorazm viloyati</td>
                 <td><span class="badge badge-amber">Palata</span></td>
                 <td>20.09.2026</td>
-                <td style="color: #be123c; font-weight: 700;">27.09.2026 (2 kun kechikkan)</td>
+                <td style="color: #be123c; font-weight: 700;">27.09.2026 (Kechikkan)</td>
                 <td><span class="badge badge-rose">Muddati o'tgan</span></td>
                 <td style="text-align: center;"><button class="btn btn-rose" style="padding: 4px 8px;">Ogohlantirish</button></td>
               </tr>
@@ -565,7 +584,6 @@
           </select>
         </label>
         
-        <!-- TALAB QILINGAN HAMKORLIK GALOCHKASI -->
         <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; display: flex; align-items: center; gap: 10px;">
           <input type="checkbox" id="op-collab" style="width: 18px; height: 18px; cursor: pointer;">
           <label for="op-collab" style="cursor: pointer; font-weight: 600; color: #1e293b;">Kadastr komplayens xizmati hamkorligida o'tkazilgan</label>
@@ -580,28 +598,35 @@
   <script>
     // 14 TA HUDUD VA ULARNING STATISTIKASI
     const regionsReportData = [
-      { id: 'samarqand', name: 'Samarqand viloyati', total: 38, hmmqo: 25, ichki: 13, hmmqo_prok: 2, hmmqo_iib: 1, hmmqo_dxx: 1, hmmqo_other: 0, ichki_prok: 2, ichki_iib: 1, ichki_dxx: 1, ichki_other: 0, hmmqo_crim: 1, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 2, hmmqo_fire: 3, hmmqo_disc: 8, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 3, ichki_disc: 7, convictedCount: 3, opsCount: 2, riskCount: 4, firedCount: 3 },
-      { id: 'toshkent_vil', name: 'Toshkent viloyati', total: 32, hmmqo: 20, ichki: 12, hmmqo_prok: 1, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 1, ichki_iib: 1, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 2, hmmqo_disc: 7, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 2, ichki_disc: 6, convictedCount: 4, opsCount: 2, riskCount: 5, firedCount: 2 },
-      { id: 'andijon', name: 'Andijon viloyati', total: 13, hmmqo: 6, ichki: 7, hmmqo_prok: 3, hmmqo_iib: 3, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 1, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 6, hmmqo_fire: 2, hmmqo_disc: 2, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 4, ichki_fire: 4, ichki_disc: 2, convictedCount: 2, opsCount: 1, riskCount: 3, firedCount: 4 },
-      { id: 'buxoro', name: 'Buxoro viloyati', total: 16, hmmqo: 3, ichki: 13, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 0, ichki_crim: 2, ichki_adm: 1, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 4, ichki_disc: 3, convictedCount: 1, opsCount: 1, riskCount: 3, firedCount: 2 },
-      { id: 'xorazm', name: 'Xorazm viloyati', total: 17, hmmqo: 10, ichki: 7, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 3, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 1, ichki_disc: 2, convictedCount: 2, opsCount: 1, riskCount: 6, firedCount: 3 },
-      { id: 'toshkent_sh', name: 'Toshkent shahri', total: 32, hmmqo: 21, ichki: 11, hmmqo_prok: 1, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 3, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 1, ichki_disc: 3, convictedCount: 2, opsCount: 2, riskCount: 4, firedCount: 2 },
-      { id: 'namangan', name: 'Namangan viloyati', total: 24, hmmqo: 15, ichki: 9, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 1, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 2, hmmqo_fire: 1, hmmqo_disc: 6, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 2, ichki_disc: 5, convictedCount: 1, opsCount: 1, riskCount: 3, firedCount: 2 },
-      { id: 'fargona', name: 'Farg\'ona viloyati', total: 29, hmmqo: 19, ichki: 10, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 1, ichki_iib: 0, ichki_dxx: 0, ichki_other: 1, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 6, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 2, ichki_disc: 5, convictedCount: 1, opsCount: 1, riskCount: 4, firedCount: 2 },
-      { id: 'qashqadaryo', name: 'Qashqadaryo viloyati', total: 28, hmmqo: 18, ichki: 10, hmmqo_prok: 2, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 2, ichki_iib: 1, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 1, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 3, hmmqo_fire: 2, hmmqo_disc: 5, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 2, ichki_fire: 3, ichki_disc: 4, convictedCount: 1, opsCount: 1, riskCount: 4, firedCount: 2 },
-      { id: 'surxondaryo', name: 'Surxondaryo viloyati', total: 22, hmmqo: 14, ichki: 8, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 5, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 1, ichki_disc: 4, convictedCount: 1, opsCount: 1, riskCount: 3, firedCount: 1 },
-      { id: 'jizzax', name: 'Jizzax viloyati', total: 36, hmmqo: 21, ichki: 15, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 2, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 0, ichki_disc: 8, convictedCount: 0, opsCount: 0, riskCount: 3, firedCount: 1 },
-      { id: 'sirdaryo', name: 'Sirdaryo viloyati', total: 15, hmmqo: 10, ichki: 5, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 1, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 3, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 1, ichki_disc: 3, convictedCount: 0, opsCount: 0, riskCount: 2, firedCount: 1 },
-      { id: 'navoiy', name: 'Navoiy viloyati', total: 18, hmmqo: 11, ichki: 7, hmmqo_prok: 1, hmmqo_iib: 0, hmmqo_dxx: 1, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 4, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 2, ichki_disc: 3, convictedCount: 0, opsCount: 1, riskCount: 2, firedCount: 1 },
-      { id: 'qr', name: 'Qoraqalpog\'iston Resp.', total: 12, hmmqo: 7, ichki: 5, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 1, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 3, ichki_disc: 0, convictedCount: 0, opsCount: 0, riskCount: 2, firedCount: 0 }
+      { id: 'samarqand', name: 'Samarqand viloyati', total: 38, hmmqo: 25, ichki: 13, hmmqo_prok: 2, hmmqo_iib: 1, hmmqo_dxx: 1, hmmqo_other: 0, ichki_prok: 2, ichki_iib: 1, ichki_dxx: 1, ichki_other: 0, hmmqo_crim: 1, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 2, hmmqo_fire: 3, hmmqo_disc: 8, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 3, ichki_disc: 7, convictedCount: 3, opsCount: 2, riskCount: 4, firedCount: 3, invCount: 38 },
+      { id: 'toshkent_vil', name: 'Toshkent viloyati', total: 32, hmmqo: 20, ichki: 12, hmmqo_prok: 1, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 1, ichki_iib: 1, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 2, hmmqo_disc: 7, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 2, ichki_disc: 6, convictedCount: 4, opsCount: 2, riskCount: 5, firedCount: 2, invCount: 32 },
+      { id: 'andijon', name: 'Andijon viloyati', total: 13, hmmqo: 6, ichki: 7, hmmqo_prok: 3, hmmqo_iib: 3, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 1, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 6, hmmqo_fire: 2, hmmqo_disc: 2, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 4, ichki_fire: 4, ichki_disc: 2, convictedCount: 2, opsCount: 1, riskCount: 3, firedCount: 4, invCount: 13 },
+      { id: 'buxoro', name: 'Buxoro viloyati', total: 16, hmmqo: 3, ichki: 13, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 0, ichki_crim: 2, ichki_adm: 1, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 4, ichki_disc: 3, convictedCount: 1, opsCount: 1, riskCount: 3, firedCount: 2, invCount: 16 },
+      { id: 'xorazm', name: 'Xorazm viloyati', total: 17, hmmqo: 10, ichki: 7, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 3, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 1, ichki_disc: 2, convictedCount: 2, opsCount: 1, riskCount: 6, firedCount: 3, invCount: 17 },
+      { id: 'toshkent_sh', name: 'Toshkent shahri', total: 32, hmmqo: 21, ichki: 11, hmmqo_prok: 1, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 3, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 1, ichki_disc: 3, convictedCount: 2, opsCount: 2, riskCount: 4, firedCount: 2, invCount: 32 },
+      { id: 'namangan', name: 'Namangan viloyati', total: 24, hmmqo: 15, ichki: 9, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 1, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 2, hmmqo_fire: 1, hmmqo_disc: 6, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 2, ichki_disc: 5, convictedCount: 1, opsCount: 1, riskCount: 3, firedCount: 2, invCount: 24 },
+      { id: 'fargona', name: 'Farg\'ona viloyati', total: 29, hmmqo: 19, ichki: 10, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 1, ichki_iib: 0, ichki_dxx: 0, ichki_other: 1, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 6, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 2, ichki_disc: 5, convictedCount: 1, opsCount: 1, riskCount: 4, firedCount: 2, invCount: 29 },
+      { id: 'qashqadaryo', name: 'Qashqadaryo viloyati', total: 28, hmmqo: 18, ichki: 10, hmmqo_prok: 2, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 2, ichki_iib: 1, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 1, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 3, hmmqo_fire: 2, hmmqo_disc: 5, ichki_crim: 1, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 2, ichki_fire: 3, ichki_disc: 4, convictedCount: 1, opsCount: 1, riskCount: 4, firedCount: 2, invCount: 28 },
+      { id: 'surxondaryo', name: 'Surxondaryo viloyati', total: 22, hmmqo: 14, ichki: 8, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 5, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 1, ichki_disc: 4, convictedCount: 1, opsCount: 1, riskCount: 3, firedCount: 1, invCount: 22 },
+      { id: 'jizzax', name: 'Jizzax viloyati', total: 36, hmmqo: 21, ichki: 15, hmmqo_prok: 1, hmmqo_iib: 1, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 2, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 0, ichki_disc: 8, convictedCount: 0, opsCount: 0, riskCount: 3, firedCount: 1, invCount: 36 },
+      { id: 'sirdaryo', name: 'Sirdaryo viloyati', total: 15, hmmqo: 10, ichki: 5, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 1, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 1, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 3, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 1, ichki_disc: 3, convictedCount: 0, opsCount: 0, riskCount: 2, firedCount: 1, invCount: 15 },
+      { id: 'navoiy', name: 'Navoiy viloyati', total: 18, hmmqo: 11, ichki: 7, hmmqo_prok: 1, hmmqo_iib: 0, hmmqo_dxx: 1, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 1, hmmqo_fire: 1, hmmqo_disc: 4, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 1, ichki_fire: 2, ichki_disc: 3, convictedCount: 0, opsCount: 1, riskCount: 2, firedCount: 1, invCount: 18 },
+      { id: 'qr', name: 'Qoraqalpog\'iston Resp.', total: 12, hmmqo: 7, ichki: 5, hmmqo_prok: 0, hmmqo_iib: 0, hmmqo_dxx: 0, hmmqo_other: 0, ichki_prok: 0, ichki_iib: 0, ichki_dxx: 0, ichki_other: 0, hmmqo_crim: 0, hmmqo_adm: 0, hmmqo_83: 0, hmmqo_84: 0, hmmqo_rej: 0, hmmqo_proc: 0, hmmqo_fire: 0, hmmqo_disc: 1, ichki_crim: 0, ichki_adm: 0, ichki_83: 0, ichki_84: 0, ichki_rej: 0, ichki_proc: 0, ichki_fire: 3, ichki_disc: 0, convictedCount: 0, opsCount: 0, riskCount: 2, firedCount: 0, invCount: 12 }
     ];
 
-    // TEZKOR TADBIRLAR BAZASI (YANGI MANTIQ BO'YICHA)
+    // XIZMAT TEKSHIRUVLARI BAZASI
+    const investigationsData = [
+      { code: '#XT-2026-019', date: '12.08.2026', region: 'Qashqadaryo viloyati', branch: 'Koson filiali', officer: 'Filial boshlig\'i', type: 'Ichki Nazorat', reason: 'Yer maydonini soxta hujjatlar bilan noqonuniy ro\'yxatga olish', result: 'Prokuraturaga yuborilgan (Jinoyat ishi)', file: 'Xulosa_019.pdf' },
+      { code: '#XT-2026-022', date: '03.09.2026', region: 'Farg\'ona viloyati', branch: 'Quva filiali', officer: 'Muhandis-yer tuzuvchi', type: 'HMMQO Xati (IIB)', reason: 'Yaqin qarindoshiga tegishli MCHJga kadastr pasportini navbatsiz tayyorlash', result: 'Mehnat shartnomasi bekor qilingan', file: 'Xulosa_022.pdf' },
+      { code: '#XT-2026-031', date: '15.09.2026', region: 'Samarqand viloyati', branch: 'Urgut filiali', officer: 'Yetakchi mutaxassis', type: 'Ichki Nazorat', reason: 'Yer chegaralarini o\'zboshimchalik bilan o\'zgartirish', result: 'Intizomiy jazo (Hayfsan)', file: 'Xulosa_031.pdf' }
+    ];
+
+    // TEZKOR TADBIRLAR BAZASI
     const operationsData = [
       { code: '#TT-2026-08', date: '18.09.2026', region: 'Samarqand viloyati', district: 'Pastdarg\'om filiali', partner: 'Davlat Xavfsizlik Xizmati (DXX)', isCollab: true, proof: '3,000 AQSH dollari', desc: '1.5 gektar ekin yerini noturar joy toifasiga soxtalashtirish evaziga pora olayotganda ushlangan', result: 'JK 210-m bilan jinoyat ishi ochilgan' },
       { code: '#TT-2026-05', date: '22.08.2026', region: 'Toshkent viloyati', district: 'Qibray tumani filiali', partner: 'Bosh prokuratura huzuridagi Departament', isCollab: false, proof: '5,000 AQSH dollari', desc: 'Auksionsiz berilgan bino kadastr pasportini tayyorlab berish evaziga ushlangan', result: 'JK 168 va 211-m (Qamoq ehtiyot chorasi)' },
       { code: '#TT-2026-02', date: '14.07.2026', region: 'Andijon viloyati', district: 'Asaka tumani filiali', partner: 'Ichki Ishlar Vazirligi (IIB)', isCollab: true, proof: '1,200 AQSH dollari', desc: 'Uy-joy chegaralarini noqonuniy kengaytirib rasmiylashtirish vaqtida ushlangan', result: 'JK 210-m (Sudga yuborilgan)' },
-      { code: '#TT-2026-12', date: '25.09.2026', region: 'Buxoro viloyati', district: 'G\'ijduvon filiali', partner: 'Prokuratura organlari', isCollab: false, proof: '3,500 AQSH dollari', desc: 'Tadbirkorga yer ajratish bo'yicha ijobiy xulosa tayyorlab berish evaziga olingan', result: 'JK 210-m bilan qamoqqa olingan' }
+      { code: '#TT-2026-12', date: '25.09.2026', region: 'Buxoro viloyati', district: 'G\'ijduvon filiali', partner: 'Prokuratura organlari', isCollab: false, proof: '3,500 AQSH dollari', desc: 'Tadbirkorga yer ajratish bo\'yicha ijobiy xulosa tayyorlab berish evaziga olingan', result: 'JK 210-m bilan qamoqqa olingan' }
     ];
 
     // SUDLANGANLAR BAZASI
@@ -659,7 +684,9 @@
         'conflict-business': 'Manfaatlar To\'qnashuvi va Tadbirkorlik (STIR)',
         'documents': '5 Bosqichli Elektron Hujjatlar Arxivi'
       };
-      document.getElementById('page-title').innerText = titles[tabId] || 'Nazorat Portali';
+      if (document.getElementById('page-title')) {
+        document.getElementById('page-title').innerText = titles[tabId] || 'Nazorat Portali';
+      }
     }
 
     function openModal(id) {
@@ -680,45 +707,76 @@
       document.getElementById('filter-' + type).classList.add('active');
 
       if (type === 'week') {
+        document.getElementById('kpi-investigations').innerText = '48 ta';
         document.getElementById('kpi-convicted').innerText = '2 nafar';
         document.getElementById('kpi-operations').innerText = '3 ta';
         document.getElementById('kpi-risk').innerText = '11 nafar';
         document.getElementById('kpi-fired').innerText = '4 nafar';
         document.getElementById('chart-badge').innerText = 'Haftalik Dinamika';
+        renderDynamicChart('week');
       } else if (type === 'month') {
+        document.getElementById('kpi-investigations').innerText = '333 ta';
         document.getElementById('kpi-convicted').innerText = '18 nafar';
         document.getElementById('kpi-operations').innerText = '14 ta';
         document.getElementById('kpi-risk').innerText = '46 nafar';
         document.getElementById('kpi-fired').innerText = '25 nafar';
         document.getElementById('chart-badge').innerText = 'Oylik Dinamika (2026-yil)';
+        renderDynamicChart('month');
       } else if (type === 'year') {
+        document.getElementById('kpi-investigations').innerText = '1,420 ta';
         document.getElementById('kpi-convicted').innerText = '74 nafar';
         document.getElementById('kpi-operations').innerText = '68 ta';
         document.getElementById('kpi-risk').innerText = '182 nafar';
         document.getElementById('kpi-fired').innerText = '94 nafar';
         document.getElementById('chart-badge').innerText = 'Yillik Umumiy Dinamika';
+        renderDynamicChart('year');
       }
     }
 
-    // DIAGRAMMA
-    function renderDynamicChart() {
+    // DIAGRAMMANI DINAMIK CHIQARISH (HAQIQIY GRAFIK)
+    function renderDynamicChart(mode) {
       const container = document.getElementById('chartBarsContainer');
-      const dataPoints = [
-        { label: 'Aprel', val: 18, color: '#1d4ed8' },
-        { label: 'May', val: 24, color: '#1d4ed8' },
-        { label: 'Iyun', val: 19, color: '#1d4ed8' },
-        { label: 'Iyul', val: 32, color: '#be123c' },
-        { label: 'Avgust', val: 28, color: '#1d4ed8' },
-        { label: 'Sentabr', val: 46, color: '#be123c' }
-      ];
+      let dataPoints = [];
 
-      container.innerHTML = dataPoints.map(p => `
-        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end;">
-          <span style="font-size: 11px; font-weight: 700; color: ${p.color};">${p.val} ta</span>
-          <div style="width: 100%; max-width: 44px; height: ${p.val * 2.2}px; background: ${p.color}; border-radius: 4px 4px 0 0;"></div>
-          <span style="font-size: 11px; font-weight: 600; color: #475569;">${p.label}</span>
-        </div>
-      `).join('');
+      if (mode === 'week') {
+        dataPoints = [
+          { label: 'Dush', val: 8, color: '#1d4ed8' },
+          { label: 'Sesh', val: 14, color: '#1d4ed8' },
+          { label: 'Chor', val: 19, color: '#be123c' },
+          { label: 'Pay', val: 11, color: '#1d4ed8' },
+          { label: 'Juma', val: 16, color: '#1d4ed8' },
+          { label: 'Shan', val: 6, color: '#047857' }
+        ];
+      } else if (mode === 'year') {
+        dataPoints = [
+          { label: '2023', val: 210, color: '#1d4ed8' },
+          { label: '2024', val: 280, color: '#1d4ed8' },
+          { label: '2025', val: 340, color: '#be123c' },
+          { label: '2026', val: 333, color: '#be123c' }
+        ];
+      } else {
+        dataPoints = [
+          { label: 'Aprel', val: 18, color: '#1d4ed8' },
+          { label: 'May', val: 24, color: '#1d4ed8' },
+          { label: 'Iyun', val: 19, color: '#1d4ed8' },
+          { label: 'Iyul', val: 32, color: '#be123c' },
+          { label: 'Avgust', val: 28, color: '#1d4ed8' },
+          { label: 'Sentabr', val: 46, color: '#be123c' }
+        ];
+      }
+
+      const maxVal = Math.max(...dataPoints.map(p => p.val));
+
+      container.innerHTML = dataPoints.map(p => {
+        const heightPercent = Math.round((p.val / maxVal) * 110);
+        return `
+          <div class="chart-bar-group">
+            <span class="chart-bar-val" style="color: ${p.color};">${p.val} ta</span>
+            <div class="chart-bar" style="height: ${heightPercent}px; background: ${p.color};"></div>
+            <span class="chart-bar-label">${p.label}</span>
+          </div>
+        `;
+      }).join('');
     }
 
     // DASHBOARD HUDUDLAR RO'YXATI (SONLAR BILAN)
@@ -728,8 +786,8 @@
         <div onclick="drillIntoRegionWorks('all', '${r.name}')" style="padding: 10px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <b style="font-size: 13px; color: #0b132b;">${r.name}</b>
-            <p style="font-size: 11px; color: #64748b; margin-top: 2px;">
-              A toifa xavf: <b style="color: #be123c;">${r.riskCount} ta</b> | Tezkor tadbir: <b style="color: #1d4ed8;">${r.opsCount} ta</b> | Bo'shatilgan: <b style="color: #047857;">${r.firedCount} ta</b>
+            <p style="font-size: 11px; color: #64748b; font-weight: 600; margin-top: 2px;">
+              Tekshiruvlar: <b style="color: #d97706;">${r.invCount} ta</b> | A toifa xavf: <b style="color: #be123c;">${r.riskCount} ta</b> | Tezkor tadbir: <b style="color: #1d4ed8;">${r.opsCount} ta</b>
             </p>
           </div>
           <button class="btn btn-slate" style="padding: 4px 10px; font-size: 11px;">Hujjatlar &rarr;</button>
@@ -737,13 +795,14 @@
       `).join('');
     }
 
-    // 1-BOSQICH: DRILLDOWN (SONLAR BILAN)
+    // 1-BOSQICH: DASHBOARD RAQAMLARI BOSILGANDA 14 TA HUDUD OCHILISHI (SONLAR BILAN)
     function startDrillFlow(categoryKey) {
       const titleMap = {
-        'convicted': 'Sudlangan Xodimlar — 14 ta Hudud Bo\'yicha Taqsimot',
-        'operations': 'Tezkor Tadbirlar — 14 ta Hudud Bo\'yicha Taqsimot',
+        'investigations': 'Xizmat Tekshiruvlari — 14 ta Hudud Bo\'yicha Taqsimot (333 ta)',
+        'convicted': 'Sudlangan Xodimlar — 14 ta Hudud Bo\'yicha Taqsimot (18 nafar)',
+        'operations': 'Tezkor Tadbirlar — 14 ta Hudud Bo\'yicha Taqsimot (14 ta)',
         'risk': 'Korrupsion Xavf Guruhlari (A, B, D) — 14 ta Hudud Bo\'yicha',
-        'fired': 'Komplayens Tashabbusi Bilan Bo\'shatilganlar — 14 ta Hudud Bo\'yicha'
+        'fired': 'Komplayens Bilan Bo\'shatilganlar — 14 ta Hudud Bo\'yicha'
       };
 
       document.getElementById('drillModalTitle').innerText = titleMap[categoryKey];
@@ -753,7 +812,8 @@
         <div class="grid-2">
           ${regionsReportData.map(reg => {
             let count = 0;
-            if (categoryKey === 'convicted') count = reg.convictedCount;
+            if (categoryKey === 'investigations') count = reg.invCount;
+            else if (categoryKey === 'convicted') count = reg.convictedCount;
             else if (categoryKey === 'operations') count = reg.opsCount;
             else if (categoryKey === 'risk') count = reg.riskCount;
             else if (categoryKey === 'fired') count = reg.firedCount;
@@ -764,7 +824,7 @@
                   <b style="font-size: 13px; color: #0b132b;">${reg.name}</b>
                   <p style="font-size: 10px; color: #1d4ed8; font-weight: 700; margin-top: 2px;">Ishlar va Hujjatlarni ochish &rarr;</p>
                 </div>
-                <span class="badge ${count>0?'badge-rose':'badge-slate'}" style="font-size: 12px;">${count} ta holat</span>
+                <span class="badge ${count>0?'badge-rose':'badge-slate'}" style="font-size: 12px;">${count} ta ish</span>
               </div>
             `;
           }).join('')}
@@ -780,6 +840,25 @@
       body.innerHTML = `
         <button onclick="startDrillFlow('${categoryKey}')" class="btn btn-slate" style="margin-bottom: 14px;">&larr; Viloyatlarga qaytish</button>
       `;
+
+      if (categoryKey === 'investigations' || categoryKey === 'all') {
+        const list = investigationsData.filter(inv => inv.region.includes(regionName) || regionName.includes('Qashqadaryo') || regionName.includes('Samarqand'));
+        body.innerHTML += `
+          <h4 style="font-size: 12px; font-weight: 700; color: #d97706; margin-bottom: 8px;">Xizmat Tekshiruvlari Xulosalari va Dalolatnomalari:</h4>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+            ${list.map(inv => `
+              <div style="padding: 12px; background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <b style="font-size: 13px; color: #a16207;">${inv.code} — ${inv.branch} (${inv.officer})</b>
+                  <p style="font-size: 11px; color: #475569; margin: 3px 0;">Asos: <b>${inv.type}</b> \vert{} Aniqlangan holat: <b>${inv.reason}</b></p>
+                  <p style="font-size: 11px; color: #b45309; font-weight: 700;">Natija: ${inv.result}</p>
+                </div>
+                <button onclick="openPdfViewer('investigation', '${inv.code}', '${inv.region}', '${inv.date}', '${inv.reason}')" class="btn btn-amber">&#128196; Xulosa PDF</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
 
       if (categoryKey === 'convicted' || categoryKey === 'all') {
         const list = convictedData.filter(c => c.region.includes(regionName) || regionName.includes('Samarqand') || regionName.includes('Toshkent'));
@@ -859,12 +938,34 @@
       }
     }
 
-    // 3-BOSQICH: RASMIY DEMO PDF
+    // 3-BOSQICH: RASMIY DEMO PDF HUJJAT OYNCHASI
     function openPdfViewer(docType, p1, p2, p3, p4) {
       const paper = document.getElementById('pdfPaperContent');
       let html = '';
 
-      if (docType === 'court') {
+      if (docType === 'investigation') {
+        document.getElementById('pdfDocTitle').innerText = `Xizmat Tekshiruvi Xulosasi — ${p1}`;
+        html = `
+          <div class="pdf-header">
+            <h2>O'zbekiston Respublikasi Kadastr Agentligi</h2>
+            <h2>Xizmat Tekshiruvi Xulosasi va Dalolatnomasi</h2>
+            <p>Hujjat kodi: ${p1} | Hudud: ${p2} | Sana: ${p3}</p>
+          </div>
+          <p style="text-indent: 30px; margin-bottom: 15px;">
+            Korrupsiyaga qarshi ichki nazorat tuzilmasi mutaxassislari tomonidan o'tkazilgan o'rganishlar davomida quyidagi qonunbuzilish holatlari aniqlandi:
+          </p>
+          <p style="text-indent: 30px; margin-bottom: 15px;">
+            Holat: <b>${p4}</b>. Mazkur holat bo'yicha mas'ul xodimlar davlat xizmatlari ko'rsatish tartibini buzib, yer maydonlarini auksionsiz berish yoki manfaatlar to'qnashuviga yo'l qo'ygan.
+          </p>
+          <p style="text-indent: 30px; font-weight: bold; margin-bottom: 25px;">
+            XULOSA: To'plangan materiallar tegishli huquqiy baho berish uchun prokuratura organlariga oshirilsin hamda aybdor xodimlarga nisbatan mehnat shartnomasini bekor qilish chorasi qo'llansin.
+          </p>
+          <div class="pdf-stamp">
+            <div><p>Komplayens inspektori: ____________</p><p style="font-size: 10px; color: #666;">Elektron tasdiqlangan</p></div>
+            <div class="stamp-box" style="border-color: #d97706; color: #d97706;">KOMPLAYENS NAZORATI<br>XIZMAT TEKSHIRUVI XULOSASI</div>
+          </div>
+        `;
+      } else if (docType === 'court') {
         document.getElementById('pdfDocTitle').innerText = `Sud Hukmi — ${p1}`;
         html = `
           <div class="pdf-header">
@@ -915,6 +1016,9 @@
           </div>
           <p style="text-align: center; font-weight: bold; margin-bottom: 15px;">
             "Xodim ${p1} bilan tuzilgan mehnat shartnomasini komplayens tekshiruvi xulosasiga ko'ra bekor qilish to'g'risida"
+          </p>
+          <p style="text-indent: 30px; margin-bottom: 15px;">
+            Korrupsiyaga qarshi ichki nazorat tuzilmasi tomonidan o'tkazilgan xizmat tekshiruvi xulosasiga ko'ra, xodim tomonidan sohaviy standartlar va qonunchilik talablari qo'pol ravishda buzilgan.
           </p>
           <p style="text-indent: 30px; font-weight: bold; margin-bottom: 25px;">
             BUYURAMAN: Xodim ${p1} egallab turgan lavozimidan Mehnat Kodeksining 161-moddasi bilan ozod etilsin va kadastr tizimiga qayta ishga olinishi taqiqlansin.
@@ -1221,7 +1325,6 @@
       alert("Korrupsion xavf guruhiga saqlandi!");
     }
 
-    // TEZKOR TADBIRNI SAQLASH (GALOCHKA HISOBGA OLINGAN)
     function saveNewOperation() {
       const region = document.getElementById('op-region').value;
       const district = document.getElementById('op-district').value;
@@ -1246,9 +1349,9 @@
       alert("Tezkor tadbir saqlandi!");
     }
 
-    // SAHIFA YUKLANGANDA
+    // SAHIFA YUKLANGANDA BARCHA JADVALLARNI QURISH
     window.onload = function() {
-      renderDynamicChart();
+      renderDynamicChart('month');
       renderDashboardRegions();
       renderMatrixTable();
       renderRiskTable();
