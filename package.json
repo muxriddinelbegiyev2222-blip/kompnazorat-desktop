@@ -1,0 +1,24 @@
+{
+  "name": "kompnazorat-desktop",
+  "version": "1.0.0",
+  "description": "Korrupsiyaga qarshi kurashish va topshiriqlar nazorati tizimi",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win"
+  },
+  "keywords": [],
+  "author": "Antikorrupsiya",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.kompnazorat.app",
+    "productName": "KompNazorat",
+    "win": {
+      "target": "nsis"
+    }
+  }
+}
